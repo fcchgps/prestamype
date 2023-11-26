@@ -1,7 +1,7 @@
 package com.prestamype.factura.application.service;
 
 
-import com.prestamype.factura.application.usecases.FacturaService1;
+import com.prestamype.factura.application.usecases.FacturaService;
 import com.prestamype.factura.domain.model.constant.Constant;
 import com.prestamype.factura.domain.port.FacturaPersistencePort;
 import com.prestamype.factura.domain.model.dto.RequestXmlDTO;
@@ -26,7 +26,7 @@ import java.util.Optional;
 
 
 @Service
-public class FacturaServiceImpl1 implements FacturaService1 {
+public class FacturaServiceImpl implements FacturaService {
 
     @Autowired
     FacturaPersistencePort facturaPersistencePort;

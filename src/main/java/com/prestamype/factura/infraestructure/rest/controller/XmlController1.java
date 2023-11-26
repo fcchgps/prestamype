@@ -1,7 +1,7 @@
 package com.prestamype.factura.infraestructure.rest.controller;
 
 
-import com.prestamype.factura.application.usecases.FacturaService1;
+import com.prestamype.factura.application.usecases.FacturaService;
 import com.prestamype.factura.domain.model.dto.RequestXmlDTO;
 import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
 import org.springframework.http.HttpStatus;
@@ -22,8 +22,9 @@ public class XmlController1 {
     //@Autowired
     //FacturaService1 facturaService;
 
-    private final FacturaService1 facturaService1;
-    public XmlController1(FacturaService1 facturaService1) {
+    private final FacturaService facturaService1;
+    public XmlController1(FacturaService facturaService1) {
+
         this.facturaService1 = facturaService1;
     }
 
