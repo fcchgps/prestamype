@@ -1,24 +1,40 @@
 package com.prestamype.factura.application.service;
 
 
+import com.prestamype.factura.application.enumeral.Role;
 import com.prestamype.factura.application.usecases.AuthenticationService;
+import com.prestamype.factura.application.usecases.JwtService;
 import com.prestamype.factura.domain.model.dto.request.AuthenticationRequest;
 import com.prestamype.factura.domain.model.dto.request.RegisterRequest;
 import com.prestamype.factura.domain.model.dto.response.AuthenticationResponse;
 import com.prestamype.factura.domain.model.dto.response.RegisterResponse;
+import com.prestamype.factura.domain.port.UserPersistencePort;
+import com.prestamype.factura.infraestructure.adapter.entity.UserEntity;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
+    private final PasswordEncoder passwordEncoder;
+    private final UserPersistencePort userPersistencePort;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
-        var user = User.builder()
+        var user = UserEntity.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        userRepository.save(user);
+
+        userPersistencePort.saveUser(user);
+
         return RegisterResponse.builder()
                 .message("Registered Successfully")
                 .build();
@@ -32,21 +48,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = userRepository.findByUsername(request.getUsername())
+        var user = userPersistencePort.findByUsername(request.getUsername())
                 .orElseThrow();
+
         var jwtToken = jwtService.generateToken(user);
         var exp = jwtService.getExpirationToken(jwtToken);
+
         return AuthenticationResponse.builder()
                 .exp(exp)
                 .user_id(user.getId())
                 .user_name((user.getUsername() != null) ? user.getUsername() : null)
-                .descripcion(user.getDescripcion() != null ? user.getDescripcion() : null)
-                .company_id((user.getCompany() != null) ? user.getCompany().getId() : null)
-                .company_description((user.getCompany() != null) ? user.getCompany().getDescripcion() : null)
-                .channel_id((user.getCanal() != null) ? user.getCanal().getId() : null)
-                .channel_name((user.getCanal() != null) ? user.getCanal().getDescripcion() : null)
-                .sale_team_id((user.getEquipo() != null) ? user.getEquipo().getId() : null)
-                .sale_team_name((user.getEquipo() != null) ? user.getEquipo().getName() : null)
                 .token(jwtToken)
                 .build();
     }

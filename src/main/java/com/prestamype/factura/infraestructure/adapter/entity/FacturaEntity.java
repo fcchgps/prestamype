@@ -36,5 +36,7 @@ public class FacturaEntity {
     @NotNull(message = "El Ruc Emisor no puede ser Nulo")
     @Column(name = "rucemisor")
     private String rucEmisor;
+    @Column(name = "usuario")
+    private String usuario;
 
 }

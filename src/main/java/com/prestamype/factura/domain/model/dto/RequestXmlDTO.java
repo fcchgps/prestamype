@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class RequestXmlDTO {
     private String url;
-
+    private String usuario;
 }

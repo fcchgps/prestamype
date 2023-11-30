@@ -33,7 +33,7 @@ public class FacturaServiceImpl implements FacturaService {
 
     @Override
     public FacturaEntity consultarFactura(FacturaEntity factura) {
-        Optional<FacturaEntity> opt = facturaPersistencePort.consultarFactura(factura.getCodigo(), factura.getRucEmisor(), factura.getRucProveedor());
+        Optional<FacturaEntity> opt = facturaPersistencePort.findFirstByCodigoAndRucEmisorAndRucProveedor(factura.getCodigo(), factura.getRucEmisor(), factura.getRucProveedor());
         if (!opt.isEmpty()) {
             throw new DuplicateKeyException("Ya existe la Factura con el id: " + factura.getCodigo());
         }
@@ -103,13 +103,17 @@ public class FacturaServiceImpl implements FacturaService {
         System.out.println(rucProveedor);
         System.out.println(rucEmisor);
 
+
         FacturaEntity factura = FacturaEntity.builder()
                 .codigo(nroFactura)
                 .fechaEmision(fechaEmision)
                 .monto(Double.parseDouble(importeTotal))
                 .moneda(tipoMoneda)
                 .rucEmisor(rucEmisor)
-                .rucProveedor(rucProveedor).build();
+                .rucProveedor(rucProveedor)
+                .usuario(request.getUsuario())
+                .build();
+
 
         return  factura;
     }
@@ -121,4 +125,11 @@ public class FacturaServiceImpl implements FacturaService {
         return facturaPersistencePort.saveFactura(factura);
     }
 
+
+    @Override
+    public List<FacturaEntity> consultarFacturasPorUsuario(String usuario,String codigo,String rucEmisor,String rucProveedor) {
+
+        return facturaPersistencePort.consultarFacturasPorUsuario(usuario,codigo,rucEmisor, rucProveedor);
+
+    }
 }
