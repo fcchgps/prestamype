@@ -1,5 +1,6 @@
 package com.prestamype.factura.infraestructure.rest.advice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,14 +11,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler
   protected ResponseEntity<ErrorResponse> handleException(NoSuchElementException exc) {
     HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+    return buildResponseEntity(httpStatus, exc);
+  }
+
+  @ExceptionHandler({ AccessDeniedException.class })
+  protected ResponseEntity<ErrorResponse> handleException(AccessDeniedException exc) {
+    HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+    return buildResponseEntity(httpStatus, exc);
+  }
+
+  @ExceptionHandler({ HttpClientErrorException.Forbidden.class })
+  protected ResponseEntity<ErrorResponse> handleException(HttpClientErrorException.Forbidden exc) {
+    HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
     return buildResponseEntity(httpStatus, exc);
   }
 

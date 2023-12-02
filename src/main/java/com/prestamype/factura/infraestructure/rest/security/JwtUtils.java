@@ -15,7 +15,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    private String SECRET_KEY = "examportal";
+    private String SECRET_KEY = "SE5WPO922bhjsYTGs663885t874374UYSHH76sus82392837masdad0oikssoYRSMDHYWasgsaYTHSG3ortal";
 
     public String extractUsername(String token) {
 
@@ -46,15 +46,16 @@ public class JwtUtils {
 
     private String createToken(Map<String, Object> claims, String subject) {
 
-        claims.put("edad",20);
-        claims.put("formacion","matematica");
-        return Jwts.builder()
+        //claims.put("edad",20);
+        //claims.put("formacion","matematica");
+         String token= Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
+        return token;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

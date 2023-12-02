@@ -5,18 +5,12 @@ import com.prestamype.factura.application.usecases.FacturaService;
 import com.prestamype.factura.domain.model.dto.RequestXmlDTO;
 import com.prestamype.factura.domain.model.dto.request.EstadoFinanciamientoRequest;
 import com.prestamype.factura.domain.model.dto.request.FinanciamientoRequest;
-import com.prestamype.factura.domain.model.dto.request.SearchFacturaRequest;
 import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
 import com.prestamype.factura.infraestructure.adapter.entity.FinanciamientoEntity;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
 
 @RestController

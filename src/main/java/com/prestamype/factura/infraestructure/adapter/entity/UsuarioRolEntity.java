@@ -1,8 +1,8 @@
 package com.prestamype.factura.infraestructure.adapter.entity;
 
 
-import jakarta.persistence.*;
 
+import javax.persistence.*;
 @Entity
 public class UsuarioRolEntity {
 
@@ -17,26 +17,32 @@ public class UsuarioRolEntity {
     private RolEntity rol;
 
     public Long getUsuarioRolId() {
+
         return usuarioRolId;
     }
 
     public void setUsuarioRolId(Long usuarioRolId) {
+
         this.usuarioRolId = usuarioRolId;
     }
 
     public UsuarioEntity getUsuario() {
+
         return usuario;
     }
 
     public void setUsuario(UsuarioEntity usuario) {
+
         this.usuario = usuario;
     }
 
     public RolEntity getRol() {
+
         return rol;
     }
 
     public void setRol(RolEntity rol) {
+
         this.rol = rol;
     }
 }

@@ -2,10 +2,12 @@ package com.prestamype.factura.infraestructure.adapter.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.prestamype.factura.domain.model.Authority;
-import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,12 +21,7 @@ public class UsuarioEntity implements UserDetails {
 
     private String username;
     private String password;
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String telefono;
     private boolean enabled = true;
-    private String perfil;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "usuario")
     @JsonIgnore
@@ -34,16 +31,11 @@ public class UsuarioEntity implements UserDetails {
 
     }
 
-    public UsuarioEntity(Long id, String username, String password, String nombre, String apellido, String email, String telefono, boolean enabled, String perfil) {
+    public UsuarioEntity(Long id, String username, String password,  boolean enabled) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.email = email;
-        this.telefono = telefono;
         this.enabled = enabled;
-        this.perfil = perfil;
     }
 
     public Long getId() {
@@ -86,6 +78,7 @@ public class UsuarioEntity implements UserDetails {
         return autoridades;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -94,52 +87,13 @@ public class UsuarioEntity implements UserDetails {
         this.password = password;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
     }
 
     public Set<UsuarioRolEntity> getUsuarioRoles() {

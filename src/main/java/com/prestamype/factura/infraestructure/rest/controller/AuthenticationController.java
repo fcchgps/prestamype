@@ -3,6 +3,7 @@ package com.prestamype.factura.infraestructure.rest.controller;
 
 import com.prestamype.factura.application.usecases.UsuarioService;
 import com.prestamype.factura.domain.model.dto.request.AuthenticationRequest;
+import com.prestamype.factura.domain.model.dto.response.JwtResponse;
 import com.prestamype.factura.infraestructure.adapter.entity.RolEntity;
 import com.prestamype.factura.infraestructure.adapter.entity.UsuarioEntity;
 import com.prestamype.factura.infraestructure.adapter.entity.UsuarioRolEntity;
@@ -52,7 +53,7 @@ public class AuthenticationController {
 
         UserDetails userDetails =  this.userDetailsService.loadUserByUsername(request.getUsername());
         String token = this.jwtUtils.generateToken(userDetails);
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     private void autenticar(String username,String password) throws Exception {
@@ -61,7 +62,7 @@ public class AuthenticationController {
         }catch (DisabledException exception){
             throw  new Exception("USUARIO DESHABILITADO " + exception.getMessage());
         }catch (BadCredentialsException e){
-            throw  new Exception("Credenciales invalidas " + e.getMessage());
+            throw  new BadCredentialsException("Credenciales invalidas " + e.getMessage());
         }
     }
 
@@ -74,7 +75,6 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public UsuarioEntity registerUsuario(@RequestBody UsuarioEntity usuario) throws Exception{
-        usuario.setPerfil("default.png");
         usuario.setPassword(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
         Set<UsuarioRolEntity> usuarioRoles = new HashSet<>();
         RolEntity rol = new RolEntity();
