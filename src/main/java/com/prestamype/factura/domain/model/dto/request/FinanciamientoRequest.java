@@ -1,18 +1,17 @@
 package com.prestamype.factura.domain.model.dto.request;
 
-import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.sql.Date;
+
+@Setter
+@Getter
 public class FinanciamientoRequest {
     private String invoice_id;
-    private Integer net_amount;
-    private String payment_date;
+    private Double net_amount=-1.0;
+    @DateTimeFormat(pattern="dd/MM/yyyy")
+    private Date payment_date;
+    private String usuario;
 }

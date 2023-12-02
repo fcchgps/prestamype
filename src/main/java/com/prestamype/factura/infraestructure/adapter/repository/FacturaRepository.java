@@ -1,5 +1,6 @@
 package com.prestamype.factura.infraestructure.adapter.repository;
 
+import com.prestamype.factura.domain.model.dto.request.FinanciamientoRequest;
 import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,6 @@ public interface FacturaRepository extends JpaRepository<FacturaEntity,Long> {
                                       @Param("rucproveedor") String rucproveedor
                                       );
 
-}
+
+    FacturaEntity findByCodigoAndUsuario(String codigo, String usuario);
+    }

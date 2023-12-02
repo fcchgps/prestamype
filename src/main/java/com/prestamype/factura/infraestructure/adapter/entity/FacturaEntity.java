@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @Table(name = "factura")
@@ -38,5 +40,7 @@ public class FacturaEntity {
     private String rucEmisor;
     @Column(name = "usuario")
     private String usuario;
+    @Column(name = "creaciondate",nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date creaciondate;
 
 }

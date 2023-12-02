@@ -1,37 +1,90 @@
 package com.prestamype.factura.infraestructure.rest.controller;
 
-import com.prestamype.factura.application.usecases.AuthenticationService;
+
+import com.prestamype.factura.application.usecases.UsuarioService;
 import com.prestamype.factura.domain.model.dto.request.AuthenticationRequest;
-import com.prestamype.factura.domain.model.dto.request.RegisterRequest;
-import com.prestamype.factura.domain.model.dto.response.ApiResponse;
-import lombok.RequiredArgsConstructor;
+import com.prestamype.factura.infraestructure.adapter.entity.RolEntity;
+import com.prestamype.factura.infraestructure.adapter.entity.UsuarioEntity;
+import com.prestamype.factura.infraestructure.adapter.entity.UsuarioRolEntity;
+import com.prestamype.factura.infraestructure.rest.security.JwtUtils;
+import com.prestamype.factura.infraestructure.rest.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
 public class AuthenticationController {
 
     @Autowired
-    AuthenticationService authenticationService;
+    private AuthenticationManager authenticationManager;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authenticationService.register(request));
-    }
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) {
-        try {
-            ApiResponse apiResponse = new ApiResponse(authenticationService.login(request), true, null, null);
-            return ResponseEntity.ok(apiResponse);
-        } catch (Exception e) {
-            ApiResponse apiResponse = new ApiResponse(null, false, 400, e.getMessage());
-            return ResponseEntity.ok(apiResponse);
+    public ResponseEntity<?> generarToken(@RequestBody AuthenticationRequest request) throws Exception {
+        try{
+            autenticar(request.getUsername(),request.getPassword());
+        }catch (BadCredentialsException exception){
+            exception.printStackTrace();
+            throw new Exception("Usuario no encontrado");
+        }
+
+        UserDetails userDetails =  this.userDetailsService.loadUserByUsername(request.getUsername());
+        String token = this.jwtUtils.generateToken(userDetails);
+        return ResponseEntity.ok(token);
+    }
+
+    private void autenticar(String username,String password) throws Exception {
+        try{
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password));
+        }catch (DisabledException exception){
+            throw  new Exception("USUARIO DESHABILITADO " + exception.getMessage());
+        }catch (BadCredentialsException e){
+            throw  new Exception("Credenciales invalidas " + e.getMessage());
         }
     }
 
+    /*
+    @GetMapping("/actual-usuario")
+    public Usuario obtenerUsuarioActual(Principal principal){
+        return (Usuario) this.userDetailsService.loadUserByUsername(principal.getName());
+    }
+     */
+
+    @PostMapping("/register")
+    public UsuarioEntity registerUsuario(@RequestBody UsuarioEntity usuario) throws Exception{
+        usuario.setPerfil("default.png");
+        usuario.setPassword(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
+        Set<UsuarioRolEntity> usuarioRoles = new HashSet<>();
+        RolEntity rol = new RolEntity();
+        rol.setRolId(2L);
+        rol.setRolNombre("USER");
+        UsuarioRolEntity usuarioRol = new UsuarioRolEntity();
+        usuarioRol.setUsuario(usuario);
+        usuarioRol.setRol(rol);
+
+        usuarioRoles.add(usuarioRol);
+        return usuarioService.guardarUsuario(usuario,usuarioRoles);
+    }
 }

@@ -1,11 +1,8 @@
 package com.prestamype.factura.infraestructure.adapter;
 
-import com.prestamype.factura.domain.port.FacturaPersistencePort;
 import com.prestamype.factura.domain.port.UserPersistencePort;
-import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
-import com.prestamype.factura.infraestructure.adapter.entity.UserEntity;
-import com.prestamype.factura.infraestructure.adapter.repository.FacturaRepository;
-import com.prestamype.factura.infraestructure.adapter.repository.UserRepository;
+import com.prestamype.factura.infraestructure.adapter.entity.UsuarioEntity;
+import com.prestamype.factura.infraestructure.adapter.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,18 +14,18 @@ import java.util.Optional;
 public class UserAdapter implements UserPersistencePort {
 
     @Autowired
-    UserRepository userRepository;
+    UsuarioRepository usuarioRepository;
 
 
     @Override
-    public UserEntity saveUser(UserEntity user) {
-        return userRepository.save(user);
+    public UsuarioEntity saveUser(UsuarioEntity user) {
+        return usuarioRepository.save(user);
 
     }
 
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        return  userRepository.findByUsername(username);
+    public Optional<UsuarioEntity> findByUsername(String username) {
+        return  usuarioRepository.findByUsername(username);
 
     }
 }

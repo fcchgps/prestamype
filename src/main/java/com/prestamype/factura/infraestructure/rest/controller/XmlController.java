@@ -3,12 +3,16 @@ package com.prestamype.factura.infraestructure.rest.controller;
 
 import com.prestamype.factura.application.usecases.FacturaService;
 import com.prestamype.factura.domain.model.dto.RequestXmlDTO;
+import com.prestamype.factura.domain.model.dto.request.EstadoFinanciamientoRequest;
 import com.prestamype.factura.domain.model.dto.request.FinanciamientoRequest;
 import com.prestamype.factura.domain.model.dto.request.SearchFacturaRequest;
 import com.prestamype.factura.infraestructure.adapter.entity.FacturaEntity;
+import com.prestamype.factura.infraestructure.adapter.entity.FinanciamientoEntity;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 
@@ -30,9 +34,9 @@ public class XmlController {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping(value = "/xmltofactura1")
-    public  ResponseEntity<FacturaEntity> xmlToFactura(@RequestBody RequestXmlDTO request)  {
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = "/registrarXml")
+    public  ResponseEntity<FacturaEntity> registrarXml(@RequestBody RequestXmlDTO request)  {
 
         FacturaEntity facturaEntity = facturaService1.consultarFactura(facturaService1.xmlToFactura(request));
 
@@ -55,17 +59,38 @@ public class XmlController {
 
     }
 
-    /*
-    @PostMapping("/solicatarfinancimiento/")
-    public  ResponseEntity<List<FacturaEntity>> solicatarFinancimiento(@RequestBody FinanciamientoRequest financiamientoRequest )  {
 
-      //  List<FacturaEntity> listaFacturaEntity = facturaService1.solicatarFinancimiento(usuario,codigo,rucEmisor,rucProveedor);
-      //  return  new ResponseEntity<List<FacturaEntity>>(listaFacturaEntity,HttpStatus.OK);
+    @PostMapping("/solicatarfinancimiento")
+    public  ResponseEntity<String> financiamiento( @RequestBody FinanciamientoRequest financiamientoRequest )  {
 
-        return null;
+        facturaService1.financiamiento(financiamientoRequest);
+      return  new ResponseEntity<String>("ok....",HttpStatus.OK);
+
+      //  return null;
     }
 
-     */
-
+    @GetMapping("/consultarFinanciamientoPorUsuario/lista")
+    public  ResponseEntity<List<FinanciamientoEntity>> consultarFinanciamientoPorUsuario(@RequestParam (value="usuario") String usuario,
+                                                                                         @RequestParam (value="factura",required = false ) String factura,
+                                                                                         @RequestParam (value="rucproveedor",required = false ) String rucProveedor ) {
+        List<FinanciamientoEntity> financiamientoEntities = facturaService1.consultarFinanciamientoPorUsuario(usuario, factura, rucProveedor);
+        return new ResponseEntity<List<FinanciamientoEntity>>(financiamientoEntities, HttpStatus.OK);
 
     }
+
+    @GetMapping("/consultarSolicitudFinanciamiento/lista")
+    public  ResponseEntity<List<FinanciamientoEntity>> consultarSolicitudFinanciamiento(@RequestParam (value="factura" ) String factura,
+                                                                                         @RequestParam (value="rucproveedor",required = false ) String rucProveedor ) {
+        List<FinanciamientoEntity> financiamientoEntities = facturaService1.consultarSolicitudFinanciamiento( factura, rucProveedor);
+        return new ResponseEntity<List<FinanciamientoEntity>>(financiamientoEntities, HttpStatus.OK);
+
+    }
+    //aprobarRechazarFinanciamiento
+    @PutMapping("/aprobarRechazarFinanciamiento")
+    public  ResponseEntity<String> aprobarRechazarFinanciamiento( @RequestBody EstadoFinanciamientoRequest estadoFinanciamientoRequest )  {
+
+        facturaService1.aprobarRechazarFinanciamiento(estadoFinanciamientoRequest);
+        return  new ResponseEntity<String>("ok....",HttpStatus.OK);
+
+    }
+}
