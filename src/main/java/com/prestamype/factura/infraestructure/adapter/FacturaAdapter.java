@@ -52,7 +52,7 @@ public class FacturaAdapter implements FacturaPersistencePort {
     }
 
     @Override
-    public FacturaEntity findByCodigoAndUsuario(String codigo, String usuario) {
+    public Optional<FacturaEntity> findByCodigoAndUsuario(String codigo, String usuario) {
         return  facturaRepository.findByCodigoAndUsuario(codigo,usuario);
     }
 

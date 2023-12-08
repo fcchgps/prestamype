@@ -70,7 +70,11 @@ public class FacturaServiceImpl implements FacturaService {
 
         String nombrearchivo = request.getUrl().toString();
 
-        File file = new File(Constant.DIRECTORIO_CARGA + nombrearchivo);
+        // File file = new File(Constant.DIRECTORIO_CARGA + nombrearchivo);
+
+        //File file = new File("src\\main\\resources\\xml\\"+ nombrearchivo);
+        //File file = new File("..\\xml\\"+ nombrearchivo);
+        File file = new File("/etc/xml/"+ nombrearchivo);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {
@@ -159,8 +163,11 @@ public class FacturaServiceImpl implements FacturaService {
         //TODO si no se envia el parameter monto, se obtiene el monto total del doc y se registra en
         // el financiamiento.
         if ( financiamientoRequest.getNet_amount()==-1)
-        {
-            FacturaEntity facturaEntity = facturaPersistencePort.findByCodigoAndUsuario(financiamientoRequest.getInvoice_id(),financiamientoRequest.getUsuario());
+        {   //tiene que ser optional, por si solicitan un financiamiento(factura y usuario q no se encuente en la tabla factura)
+            //FacturaEntity facturaEntity = facturaPersistencePort.findByCodigoAndUsuario(financiamientoRequest.getInvoice_id(),financiamientoRequest.getUsuario());
+            FacturaEntity facturaEntity = facturaPersistencePort.findByCodigoAndUsuario(financiamientoRequest.getInvoice_id(),financiamientoRequest.getUsuario())
+                    .orElseThrow(  ()->new NoSuchElementException("No existe usuario con la factura solicitada... " ) );
+
             financiamientoRequest.setNet_amount(facturaEntity.getMonto());
         }
 

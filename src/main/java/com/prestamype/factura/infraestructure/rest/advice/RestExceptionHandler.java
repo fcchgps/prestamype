@@ -15,8 +15,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+
   @ExceptionHandler
   protected ResponseEntity<ErrorResponse> handleException(NoSuchElementException exc) {
     HttpStatus httpStatus = HttpStatus.BAD_REQUEST;

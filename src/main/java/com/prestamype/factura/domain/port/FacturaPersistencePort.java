@@ -13,7 +13,8 @@ public interface FacturaPersistencePort {
    List<FacturaEntity> consultarFacturasPorUsuario(String usuario,String codigo,String rucEmisor,String rucProveedor);
    Optional<FinanciamientoEntity> findFirstByFacturaAndUsuario(String codigo, String usuario);
    void saveFinanciamiento(FinanciamientoEntity financiamientoEntity);
-   FacturaEntity findByCodigoAndUsuario(String codigo,String usuario);
+   //FacturaEntity findByCodigoAndUsuario(String codigo,String usuario);
+   Optional<FacturaEntity> findByCodigoAndUsuario(String codigo,String usuario);
    List<FinanciamientoEntity> consultarFinanciamientoPorUsuario(String usuario,String factura,String rucProveedor);
    List<FinanciamientoEntity> consultarSolicitudFinanciamiento(String factura,String rucProveedor);
    //void aprobarRechazarFinanciamiento(Long idFinanciamiento);

@@ -22,5 +22,6 @@ public interface FacturaRepository extends JpaRepository<FacturaEntity,Long> {
                                       );
 
 
-    FacturaEntity findByCodigoAndUsuario(String codigo, String usuario);
+    //FacturaEntity findByCodigoAndUsuario(String codigo, String usuario);
+    Optional<FacturaEntity> findByCodigoAndUsuario(String codigo, String usuario);
     }

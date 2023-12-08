@@ -10,6 +10,7 @@ import com.prestamype.factura.infraestructure.adapter.entity.UsuarioRolEntity;
 import com.prestamype.factura.infraestructure.rest.security.JwtUtils;
 import com.prestamype.factura.infraestructure.rest.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,7 +49,8 @@ public class AuthenticationController {
             autenticar(request.getUsername(),request.getPassword());
         }catch (BadCredentialsException exception){
             exception.printStackTrace();
-            throw new Exception("Usuario no encontrado");
+            //throw new Exception("Usuario no encontrado");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         UserDetails userDetails =  this.userDetailsService.loadUserByUsername(request.getUsername());
@@ -66,12 +68,6 @@ public class AuthenticationController {
         }
     }
 
-    /*
-    @GetMapping("/actual-usuario")
-    public Usuario obtenerUsuarioActual(Principal principal){
-        return (Usuario) this.userDetailsService.loadUserByUsername(principal.getName());
-    }
-     */
 
     @PostMapping("/register")
     public UsuarioEntity registerUsuario(@RequestBody UsuarioEntity usuario) throws Exception{

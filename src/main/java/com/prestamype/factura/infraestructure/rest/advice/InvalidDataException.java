@@ -18,6 +18,7 @@ public class InvalidDataException extends RuntimeException {
   }
 
   public BindingResult getResult() {
+
     return result;
   }
 }

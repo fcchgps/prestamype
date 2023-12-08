@@ -1,0 +1,22 @@
+server:
+  port: 8085
+spring:
+  datasource:
+    url: ${DEV_DB_URL_DOCKER}
+    username: ${DEV_USERNAME}
+    password: ${DEV_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+
+#jpa:
+#  hibernate:
+#    ddl-auto: update

@@ -28,7 +28,7 @@ public class XmlController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping(value = "/registrarXml")
     public  ResponseEntity<FacturaEntity> registrarXml(@RequestBody RequestXmlDTO request)  {
 
@@ -40,6 +40,7 @@ public class XmlController {
 
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/consultarfacturasporusuario/lista")
     public  ResponseEntity<List<FacturaEntity>> consultarFacturasPorUsuario(@RequestParam (value="usuario") String usuario,
                                                                             @RequestParam (value="codigo",required = false ) String codigo,
@@ -53,16 +54,17 @@ public class XmlController {
 
     }
 
-
+    @PreAuthorize("hasAuthority('USER')")
     @PostMapping("/solicatarfinancimiento")
     public  ResponseEntity<String> financiamiento( @RequestBody FinanciamientoRequest financiamientoRequest )  {
 
         facturaService1.financiamiento(financiamientoRequest);
-      return  new ResponseEntity<String>("ok....",HttpStatus.OK);
+      return  new ResponseEntity<String>("Financiamiento regsitrado....",HttpStatus.OK);
 
       //  return null;
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/consultarFinanciamientoPorUsuario/lista")
     public  ResponseEntity<List<FinanciamientoEntity>> consultarFinanciamientoPorUsuario(@RequestParam (value="usuario") String usuario,
                                                                                          @RequestParam (value="factura",required = false ) String factura,
@@ -72,6 +74,7 @@ public class XmlController {
 
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/consultarSolicitudFinanciamiento/lista")
     public  ResponseEntity<List<FinanciamientoEntity>> consultarSolicitudFinanciamiento(@RequestParam (value="factura" ) String factura,
                                                                                          @RequestParam (value="rucproveedor",required = false ) String rucProveedor ) {
@@ -80,11 +83,12 @@ public class XmlController {
 
     }
     //aprobarRechazarFinanciamiento
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/aprobarRechazarFinanciamiento")
     public  ResponseEntity<String> aprobarRechazarFinanciamiento( @RequestBody EstadoFinanciamientoRequest estadoFinanciamientoRequest )  {
 
         facturaService1.aprobarRechazarFinanciamiento(estadoFinanciamientoRequest);
-        return  new ResponseEntity<String>("ok....",HttpStatus.OK);
+        return  new ResponseEntity<String>("Registrado....",HttpStatus.OK);
 
     }
 }
